@@ -1,0 +1,163 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+  # labels:
+  #   app: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+      - name: elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+        env:
+          - name: discovery.type
+            value: single-node
+          - name: ES_JAVA_OPTS
+            value: '-Xms512m -Xmx512m'
+          - name: ELASTIC_USERNAME
+            value: Kevin
+          - name: ELASTIC_PASSWORD
+            value: abc
+          - name: xpack.security.enabled
+            value: "false"
+          - name: xpack.security.http.ssl.enabled
+            value: "false"
+          # - name: "cluster.name"
+          #   value: "elasticsearch-cluster"
+          # - name: "node.master"
+          #   value: "true"
+          # - name: "node.data"
+          #   value: "false"
+          # - name: "node.ingest"
+          #   value: "false"
+
+        ports:
+          - containerPort: 9200
+            protocol: TCP
+          - containerPort: 9300
+            protocol: TCP
+        volumeMounts:
+          - name: es-data
+            mountPath: /usr/share/elasticsearch/data
+      volumes:
+      - name: es-data
+        emptyDir: {}
+        # hostPath:
+        #   path: /
+        #   type: Directory
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: elasticsearch-master
+#   labels:
+#     component: elasticsearch
+#     role: master
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       component: elasticsearch
+#       role: master
+#   template:
+#     metadata:
+#       labels:
+#         component: elasticsearch
+#         role: master
+#     spec:
+#       containers:
+#       - name: elasticsearch
+#         image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+#         env:
+#           - name: discovery.type
+#             value: "master"
+#           - name: cluster.initial_master_nodes
+#             value: "elasticsearch-master-0"
+#           - name: node.master
+#             value: "true"
+#           - name: node.data
+#             value: "false"
+#           - name: ES_JAVA_OPTS
+#             value: '-Xms512m -Xmx512m'
+#           - name: ELASTIC_USERNAME
+#             value: Kevin
+#           - name: ELASTIC_PASSWORD
+#             value: abc
+#           - name: xpack.security.enabled
+#             value: "false"
+#           - name: xpack.security.http.ssl.enabled
+#             value: "false"
+#         ports:
+#           - containerPort: 9200
+#             protocol: TCP
+#           - containerPort: 9300
+#             protocol: TCP
+#         volumeMounts:
+#           - name: es-master-data
+#             mountPath: /usr/share/elasticsearch/data
+#       volumes:
+#       - name: es-master-data
+#         emptyDir: {}
+
+
+# ---
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: elasticsearch-data
+#   labels:
+#     component: elasticsearch
+#     role: data
+# spec:
+#   replicas: 2  # Specifies the desired number of data node replicas
+#   selector:
+#     matchLabels:
+#       component: elasticsearch
+#       role: data
+#   template:
+#     metadata:
+#       labels:
+#         component: elasticsearch
+#         role: data
+#     spec:
+#       containers:
+#       - name: elasticsearch
+#         image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+#         env:
+#           - name: discovery.type
+#             value: "data"
+#           - name: node.master
+#             value: "false"
+#           - name: node.data
+#             value: "true"
+#           - name: ES_JAVA_OPTS
+#             value: '-Xms512m -Xmx512m'
+#           - name: ELASTIC_USERNAME
+#             value: Kevin
+#           - name: ELASTIC_PASSWORD
+#             value: abc
+#           - name: xpack.security.enabled
+#             value: "false"
+#           - name: xpack.security.http.ssl.enabled
+#             value: "false"
+#         ports:
+#           - containerPort: 9200
+#             protocol: TCP
+#           - containerPort: 9300
+#             protocol: TCP
+#         volumeMounts:
+#           - name: es-data-data
+#             mountPath: /usr/share/elasticsearch/data
+#       volumes:
+#       - name: es-data-data
+#         emptyDir: {}
