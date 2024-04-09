@@ -7,6 +7,7 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - xpack.security.http.ssl:enabled=false
+      - ELASTIC_PASSWORD="abcabc"
     ports:
       - 9200:9200
       - 9300:9300
@@ -21,6 +22,7 @@ services:
       - elastic
     depends_on:
       - elasticsearch
+    command:
 
 networks:
   elastic:
