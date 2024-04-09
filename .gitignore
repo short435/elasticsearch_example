@@ -1,2 +1,8 @@
 # environment variable
 .env
+
+# vscode settings
+.vscode/
+
+# volumn for binding to VM 
+volumn/
